@@ -3,36 +3,16 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, XCircle, Trophy } from "lucide-react";
 import { useState } from "react";
+import { Question } from "@/data/questions";
 
-interface Option {
-  id: string;
-  text: string;
+interface QuestionInterfaceProps {
+  question: Question;
+  currentQuestion: number;
+  totalQuestions: number;
+  onNext: () => void;
 }
 
-const sampleQuestion = {
-  role: "Data Analyst",
-  level: "Easy",
-  title: "Find the Pattern",
-  description: "Look at the sales data below and answer the question.",
-  data: [
-    { day: "Mon", apples: 3 },
-    { day: "Tue", apples: 5 },
-    { day: "Wed", apples: 2 },
-    { day: "Thu", apples: 7 },
-    { day: "Fri", apples: 5 },
-  ],
-  question: "Which day sold the most apples?",
-  options: [
-    { id: "a", text: "Monday" },
-    { id: "b", text: "Tuesday" },
-    { id: "c", text: "Wednesday" },
-    { id: "d", text: "Thursday" },
-  ],
-  correctAnswer: "d",
-  points: 10,
-};
-
-const QuestionInterface = () => {
+const QuestionInterface = ({ question, currentQuestion, totalQuestions, onNext }: QuestionInterfaceProps) => {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [isChecked, setIsChecked] = useState(false);
 
@@ -40,7 +20,13 @@ const QuestionInterface = () => {
     setIsChecked(true);
   };
 
-  const isCorrect = selectedAnswer === sampleQuestion.correctAnswer;
+  const handleNext = () => {
+    setSelectedAnswer(null);
+    setIsChecked(false);
+    onNext();
+  };
+
+  const isCorrect = selectedAnswer === question.correctAnswer;
 
   return (
     <div className="max-w-3xl mx-auto space-y-6 animate-fade-in">
@@ -48,55 +34,44 @@ const QuestionInterface = () => {
       <div className="flex items-center justify-between">
         <div className="space-y-1">
           <Badge className="bg-primary/10 text-primary border-primary/20">
-            {sampleQuestion.role}
+            {question.role}
           </Badge>
-          <h2 className="text-2xl font-bold">{sampleQuestion.title}</h2>
+          <h2 className="text-2xl font-bold">{question.title}</h2>
         </div>
         <div className="flex items-center gap-2">
           <Trophy className="w-5 h-5 text-secondary" />
-          <span className="font-semibold">{sampleQuestion.points} pts</span>
+          <span className="font-semibold">{question.points} pts</span>
         </div>
       </div>
 
       {/* Progress */}
       <div className="space-y-2">
         <div className="flex justify-between text-sm text-muted-foreground">
-          <span>Question 1 of 5</span>
-          <span>Level: {sampleQuestion.level}</span>
+          <span>Question {currentQuestion} of {totalQuestions}</span>
+          <span>Level: {question.level}</span>
         </div>
         <div className="h-2 bg-muted rounded-full overflow-hidden">
-          <div className="h-full bg-primary w-1/5 transition-all duration-300" />
+          <div 
+            className="h-full bg-primary transition-all duration-300" 
+            style={{ width: `${(currentQuestion / totalQuestions) * 100}%` }}
+          />
         </div>
       </div>
 
       {/* Question Card */}
       <Card className="card-base p-6 space-y-6">
         {/* Description */}
-        <p className="text-lg">{sampleQuestion.description}</p>
-
-        {/* Data Display */}
-        <div className="bg-muted/50 rounded-lg p-4 space-y-2">
-          <div className="font-semibold text-sm text-muted-foreground mb-3">SALES DATA</div>
-          <div className="grid grid-cols-5 gap-2">
-            {sampleQuestion.data.map((item) => (
-              <div key={item.day} className="text-center space-y-1">
-                <div className="text-sm font-medium">{item.day}</div>
-                <div className="text-2xl font-bold text-primary">{item.apples}</div>
-                <div className="text-xs text-muted-foreground">apples</div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <p className="text-lg">{question.description}</p>
 
         {/* Question */}
         <div className="space-y-4">
-          <p className="font-semibold text-lg">{sampleQuestion.question}</p>
+          <p className="font-semibold text-lg">{question.question}</p>
 
           {/* Options */}
           <div className="space-y-2">
-            {sampleQuestion.options.map((option) => {
+            {question.options.map((option) => {
               const isSelected = selectedAnswer === option.id;
-              const showCorrect = isChecked && option.id === sampleQuestion.correctAnswer;
+              const showCorrect = isChecked && option.id === question.correctAnswer;
               const showWrong = isChecked && isSelected && !isCorrect;
 
               return (
@@ -140,9 +115,10 @@ const QuestionInterface = () => {
         ) : (
           <Button
             size="lg"
+            onClick={handleNext}
             className={isCorrect ? "bg-success hover:bg-success/90" : "bg-secondary hover:bg-secondary/90"}
           >
-            {isCorrect ? "Continue +" + sampleQuestion.points : "Try Again"}
+            {isCorrect ? `Continue +${question.points}` : "Try Again"}
           </Button>
         )}
       </div>
@@ -161,9 +137,7 @@ const QuestionInterface = () => {
                 {isCorrect ? "Excellent work! 🎉" : "Not quite right"}
               </p>
               <p className="text-sm text-muted-foreground">
-                {isCorrect
-                  ? "Thursday had the highest sales with 7 apples sold."
-                  : "Look at the numbers carefully - which day has the highest value?"}
+                {question.explanation}
               </p>
             </div>
           </div>

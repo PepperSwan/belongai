@@ -61,7 +61,7 @@ const Roles = () => {
       {/* Header */}
       <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container px-4 py-4 flex items-center justify-between">
-          <Link to="/">
+          <Link to="/dashboard">
             <Button variant="ghost" size="sm">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
