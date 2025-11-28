@@ -21,10 +21,22 @@ const Hero = () => {
       {/* Content */}
       <div className="container relative z-10 px-4 py-20 md:py-32">
         <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-primary/20 via-secondary/20 to-primary/20 border-2 border-primary/30 backdrop-blur-sm shadow-lg hover:shadow-[0_0_30px_rgba(34,211,238,0.3)] transition-all duration-300 hover:scale-105">
-            <Sparkles className="w-4 h-4 text-secondary animate-pulse" />
-            <span className="text-sm font-semibold bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">From Imposter to Belonger</span>
+          {/* Logo */}
+          <div className="mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
+              BelongAI
+            </h2>
+          </div>
+
+          {/* Badge - Angular/Geometric Style */}
+          <div className="relative inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-br from-background/80 to-background/60 backdrop-blur-md border-l-4 border-r-4 border-secondary shadow-[0_0_20px_rgba(244,114,82,0.3)] hover:shadow-[0_0_40px_rgba(244,114,82,0.5)] transition-all duration-300 group">
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 opacity-50"></div>
+            <Sparkles className="w-5 h-5 text-secondary animate-pulse relative z-10" />
+            <span className="text-base font-bold text-foreground relative z-10 group-hover:text-gradient transition-all">
+              From Imposter to Belonger
+            </span>
+            <div className="absolute -left-1 top-0 w-1 h-full bg-primary"></div>
+            <div className="absolute -right-1 top-0 w-1 h-full bg-primary"></div>
           </div>
 
           {/* Headline */}
