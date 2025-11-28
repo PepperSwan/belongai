@@ -43,9 +43,11 @@ const Hero = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col gap-4 justify-center items-center pt-4 max-w-md mx-auto w-full">
-            <Button size="lg" variant="outline" className="border-2 w-full">
-              See How It Works
-            </Button>
+            <a href="#how-it-works" className="w-full">
+              <Button size="lg" variant="outline" className="border-2 w-full">
+                See How It Works
+              </Button>
+            </a>
             <Link to="/roles" className="w-full">
               <Button
                 size="lg"

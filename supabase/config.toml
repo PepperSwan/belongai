@@ -1,0 +1,4 @@
+project_id = "dapfgrkcmwwxsxgppmvp"
+
+[functions.analyze-skills]
+verify_jwt = false
