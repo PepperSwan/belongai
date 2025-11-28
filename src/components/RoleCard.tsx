@@ -61,7 +61,7 @@ const RoleCard = ({
       </div>
 
       {/* CTA */}
-      <Link to={`/learn/${title.toLowerCase().replace(/\s+/g, '-')}`}>
+      <Link to={`/courses/${title}`}>
         <Button variant="ghost" className="w-full group/btn justify-between">
           Start Learning
           <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />

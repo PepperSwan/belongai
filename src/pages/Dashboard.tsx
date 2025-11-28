@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sparkles, BookOpen, LogOut } from "lucide-react";
+import { Sparkles, BookOpen, LogOut, TrendingUp, Trophy, Flame } from "lucide-react";
 import { Loader2 } from "lucide-react";
 
 const Dashboard = () => {
@@ -46,7 +46,7 @@ const Dashboard = () => {
           </Button>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto mb-12">
           <Card className="hover-lift transition-all cursor-pointer" onClick={() => navigate("/breaking-barriers")}>
             <CardHeader>
               <div className="text-4xl mb-2">✊</div>
@@ -88,6 +88,53 @@ const Dashboard = () => {
             <CardContent>
               <Button className="w-full">
                 Explore Roles
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <Card className="hover-lift transition-all cursor-pointer" onClick={() => navigate("/course-progress")}>
+            <CardHeader>
+              <TrendingUp className="h-10 w-10 mb-2 text-primary" />
+              <CardTitle>Course Progress</CardTitle>
+              <CardDescription>
+                Track your learning journey, accuracy rates, and completed courses
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button className="w-full" variant="secondary">
+                View Progress
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="hover-lift transition-all cursor-pointer" onClick={() => navigate("/trophy-shelf")}>
+            <CardHeader>
+              <Trophy className="h-10 w-10 mb-2 text-primary" />
+              <CardTitle>Trophy Shelf</CardTitle>
+              <CardDescription>
+                See your earned trophies and discover new achievements to unlock
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button className="w-full" variant="secondary">
+                View Trophies
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="hover-lift transition-all cursor-pointer" onClick={() => navigate("/streak")}>
+            <CardHeader>
+              <Flame className="h-10 w-10 mb-2 text-primary" />
+              <CardTitle>Streak</CardTitle>
+              <CardDescription>
+                Maintain your daily learning streak and beat your personal best
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button className="w-full">
+                View Streak
               </Button>
             </CardContent>
           </Card>

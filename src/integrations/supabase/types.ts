@@ -50,6 +50,39 @@ export type Database = {
         }
         Relationships: []
       }
+      courses: {
+        Row: {
+          created_at: string
+          description: string
+          difficulty: string
+          id: string
+          order_index: number
+          role: string
+          title: string
+          total_questions: number
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          difficulty: string
+          id?: string
+          order_index: number
+          role: string
+          title: string
+          total_questions?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          difficulty?: string
+          id?: string
+          order_index?: number
+          role?: string
+          title?: string
+          total_questions?: number
+        }
+        Relationships: []
+      }
       learning_progress: {
         Row: {
           id: string
@@ -139,6 +172,142 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      trophies: {
+        Row: {
+          created_at: string
+          criteria_type: string
+          criteria_value: Json
+          description: string
+          icon: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          criteria_type: string
+          criteria_value: Json
+          description: string
+          icon: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          criteria_type?: string
+          criteria_value?: Json
+          description?: string
+          icon?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      user_course_progress: {
+        Row: {
+          completed_at: string | null
+          course_id: string
+          first_attempt_correct: number
+          id: string
+          last_accessed: string
+          questions_answered: number
+          started_at: string
+          total_attempts: number
+          total_questions: number
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          course_id: string
+          first_attempt_correct?: number
+          id?: string
+          last_accessed?: string
+          questions_answered?: number
+          started_at?: string
+          total_attempts?: number
+          total_questions?: number
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          course_id?: string
+          first_attempt_correct?: number
+          id?: string
+          last_accessed?: string
+          questions_answered?: number
+          started_at?: string
+          total_attempts?: number
+          total_questions?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_course_progress_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_streaks: {
+        Row: {
+          created_at: string
+          current_streak: number
+          id: string
+          last_activity_date: string | null
+          max_streak: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_streak?: number
+          id?: string
+          last_activity_date?: string | null
+          max_streak?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_streak?: number
+          id?: string
+          last_activity_date?: string | null
+          max_streak?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_trophies: {
+        Row: {
+          earned_at: string
+          id: string
+          trophy_id: string
+          user_id: string
+        }
+        Insert: {
+          earned_at?: string
+          id?: string
+          trophy_id: string
+          user_id: string
+        }
+        Update: {
+          earned_at?: string
+          id?: string
+          trophy_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_trophies_trophy_id_fkey"
+            columns: ["trophy_id"]
+            isOneToOne: false
+            referencedRelation: "trophies"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
