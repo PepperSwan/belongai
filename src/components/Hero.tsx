@@ -48,6 +48,16 @@ const Hero = () => {
                 See How It Works
               </Button>
             </a>
+            <Link to="/path-match" className="w-full">
+              <Button
+                size="lg"
+                variant="secondary"
+                className="w-full"
+              >
+                Find Your Path Match
+                <Sparkles className="ml-2 w-5 h-5" />
+              </Button>
+            </Link>
             <Link to="/roles" className="w-full">
               <Button
                 size="lg"
@@ -57,14 +67,13 @@ const Hero = () => {
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-            <Link to="/path-match" className="w-full">
+            <Link to="/breaking-barriers" className="w-full">
               <Button
                 size="lg"
-                variant="secondary"
-                className="w-full"
+                variant="outline"
+                className="border-2 w-full"
               >
-                Find Your Path Match
-                <Sparkles className="ml-2 w-5 h-5" />
+                Breaking Barriers
               </Button>
             </Link>
           </div>
