@@ -4,18 +4,18 @@ const HowItWorks = () => {
   const steps = [
     {
       icon: Target,
-      title: "Choose Your Role",
-      description: "Pick from 10+ tech roles like Product Manager, UX Designer, or Data Analyst based on your interests."
+      title: "Breaking Barriers",
+      description: "For people from backgrounds which are underrepresented in tech, get bespoke advice on how best to use our platform and apply yourself in your journey to your dream tech role."
     },
     {
       icon: Gamepad2,
-      title: "Complete Real Tasks",
-      description: "Work through gamified scenarios that simulate actual day-to-day responsibilities of professionals in that role."
+      title: "Find Your Path Match",
+      description: "Tell us about any and all experience you have in your life, even in places where you think it might not matter! Our AI platform can help match your current skillset to skills you can utilise when moving into the tech world."
     },
     {
       icon: Trophy,
-      title: "Build Confidence",
-      description: "Gain practical experience and overcome imposter syndrome by proving to yourself you can do the work."
+      title: "Start Learning",
+      description: "Select from a wide range of different tech roles to take on gamified, real-world tasks that simulate what professionals actually do every day."
     }
   ];
 
