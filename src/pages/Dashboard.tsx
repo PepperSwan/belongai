@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sparkles, BookOpen, LogOut, TrendingUp, Trophy, Flame } from "lucide-react";
+import { Sparkles, BookOpen, LogOut, TrendingUp, Trophy, Flame, Hand } from "lucide-react";
 import { Loader2 } from "lucide-react";
 
 const Dashboard = () => {
@@ -49,7 +49,7 @@ const Dashboard = () => {
         <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto mb-12">
           <Card className="hover-lift transition-all cursor-pointer" onClick={() => navigate("/breaking-barriers")}>
             <CardHeader>
-              <div className="text-4xl mb-2">✊</div>
+              <Hand className="h-10 w-10 mb-2 text-primary" />
               <CardTitle>Breaking Barriers</CardTitle>
               <CardDescription>
                 Get personalized advice for overcoming barriers as someone from an underrepresented background in tech
