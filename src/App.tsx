@@ -12,6 +12,10 @@ import Learn from "./pages/Learn";
 import PathMatch from "./pages/PathMatch";
 import BreakingBarriers from "./pages/BreakingBarriers";
 import NotFound from "./pages/NotFound";
+import CourseList from "./pages/CourseList";
+import CourseProgress from "./pages/CourseProgress";
+import TrophyShelf from "./pages/TrophyShelf";
+import Streak from "./pages/Streak";
 
 const queryClient = new QueryClient();
 
@@ -27,7 +31,11 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/roles" element={<Roles />} />
-            <Route path="/learn/:role" element={<Learn />} />
+            <Route path="/courses/:role" element={<CourseList />} />
+            <Route path="/learn/:courseSlug" element={<Learn />} />
+            <Route path="/course-progress" element={<CourseProgress />} />
+            <Route path="/trophy-shelf" element={<TrophyShelf />} />
+            <Route path="/streak" element={<Streak />} />
             <Route path="/path-match" element={<PathMatch />} />
             <Route path="/breaking-barriers" element={<BreakingBarriers />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

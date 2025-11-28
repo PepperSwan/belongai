@@ -3,27 +3,46 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, XCircle, Trophy } from "lucide-react";
 import { useState } from "react";
-import { Question } from "@/data/questions";
-
 interface QuestionInterfaceProps {
-  question: Question;
+  question: {
+    title: string;
+    description: string;
+    question: string;
+    options: Array<{ id: string; text: string }>;
+    correctAnswer: string;
+    explanation: string;
+    points: number;
+    role: string;
+    difficulty: string;
+  };
   currentQuestion: number;
   totalQuestions: number;
   onNext: () => void;
+  onAnswerSubmit?: (isCorrect: boolean, isFirstAttempt: boolean) => void;
 }
 
-const QuestionInterface = ({ question, currentQuestion, totalQuestions, onNext }: QuestionInterfaceProps) => {
+const QuestionInterface = ({ question, currentQuestion, totalQuestions, onNext, onAnswerSubmit }: QuestionInterfaceProps) => {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [isChecked, setIsChecked] = useState(false);
+  const [attempts, setAttempts] = useState(0);
 
   const handleCheck = () => {
     setIsChecked(true);
+    const isCorrect = selectedAnswer === question.correctAnswer;
+    setAttempts(prev => prev + 1);
+    onAnswerSubmit?.(isCorrect, attempts === 0);
   };
 
   const handleNext = () => {
-    setSelectedAnswer(null);
-    setIsChecked(false);
-    onNext();
+    if (isCorrect) {
+      setSelectedAnswer(null);
+      setIsChecked(false);
+      setAttempts(0);
+      onNext();
+    } else {
+      // Allow retry
+      setIsChecked(false);
+    }
   };
 
   const isCorrect = selectedAnswer === question.correctAnswer;
@@ -48,7 +67,7 @@ const QuestionInterface = ({ question, currentQuestion, totalQuestions, onNext }
       <div className="space-y-2">
         <div className="flex justify-between text-sm text-muted-foreground">
           <span>Question {currentQuestion} of {totalQuestions}</span>
-          <span>Level: {question.level}</span>
+          <span>Level: {question.difficulty}</span>
         </div>
         <div className="h-2 bg-muted rounded-full overflow-hidden">
           <div 
