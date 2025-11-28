@@ -42,19 +42,29 @@ const Hero = () => {
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
-            <Link to="/roles">
+          <div className="flex flex-col gap-4 justify-center items-center pt-4 max-w-md mx-auto w-full">
+            <Button size="lg" variant="outline" className="border-2 w-full">
+              See How It Works
+            </Button>
+            <Link to="/roles" className="w-full">
               <Button
                 size="lg"
-                className="group bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all"
+                className="group bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all w-full"
               >
                 Start Learning
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-            <Button size="lg" variant="outline" className="border-2">
-              See How It Works
-            </Button>
+            <Link to="/path-match" className="w-full">
+              <Button
+                size="lg"
+                variant="secondary"
+                className="w-full"
+              >
+                Find Your Path Match
+                <Sparkles className="ml-2 w-5 h-5" />
+              </Button>
+            </Link>
           </div>
 
           {/* Stats */}
