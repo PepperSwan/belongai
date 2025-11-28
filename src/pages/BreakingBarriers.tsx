@@ -15,7 +15,6 @@ interface AdviceResult {
 }
 
 const BreakingBarriers = () => {
-  const [selectedCategory, setSelectedCategory] = useState("");
   const [experience, setExperience] = useState("");
   const [advice, setAdvice] = useState<AdviceResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -24,15 +23,6 @@ const BreakingBarriers = () => {
   const { toast } = useToast();
   const { user, loading } = useAuth();
   const navigate = useNavigate();
-
-  const communities = [
-    "Women and minority genders",
-    "Ethnic minorities",
-    "LGBTQ+ community",
-    "Elderly individuals",
-    "People with disabilities",
-    "Neurodivergent individuals (SEN)"
-  ];
 
   useEffect(() => {
     if (!loading && !user) {
@@ -64,10 +54,10 @@ const BreakingBarriers = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!selectedCategory || !experience.trim()) {
+    if (!experience.trim()) {
       toast({
         title: "Missing Information",
-        description: "Please select your background and share your experience.",
+        description: "Please share your background and experiences.",
         variant: "destructive",
       });
       return;
@@ -78,8 +68,7 @@ const BreakingBarriers = () => {
     try {
       const { data, error } = await supabase.functions.invoke("breaking-barriers-advice", {
         body: {
-          backgroundCategory: selectedCategory,
-          experience: experience,
+          background: experience,
         },
       });
 
@@ -92,7 +81,7 @@ const BreakingBarriers = () => {
         .from("breaking_barriers_results")
         .insert({
           user_id: user?.id,
-          background_category: selectedCategory,
+          background_category: "User Input",
           experience: experience,
           barriers: data.advice.barriers,
           strategies: data.advice.strategies,
@@ -151,8 +140,8 @@ const BreakingBarriers = () => {
             <Heart className="w-10 h-10 text-primary" />
             <h1 className="text-4xl md:text-5xl font-bold">Breaking Barriers</h1>
           </div>
-          <p className="text-xl text-muted-foreground">
-            Get personalized advice and support for your tech journey
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Share your unique background and experiences. Our AI will provide personalized advice for overcoming barriers in tech, tailored specifically to your situation.
           </p>
         </div>
 
@@ -173,7 +162,6 @@ const BreakingBarriers = () => {
                       resources: result.resources,
                       encouragement: result.encouragement,
                     });
-                    setSelectedCategory(result.background_category);
                     setExperience(result.experience);
                     setShowPrevious(false);
                   }}
@@ -188,36 +176,6 @@ const BreakingBarriers = () => {
           </Card>
         )}
 
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="w-6 h-6" />
-              We're Here For You
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground mb-6">
-              We provide guidance and support for people from all underrepresented backgrounds in tech:
-            </p>
-            <div className="grid md:grid-cols-2 gap-4">
-              {communities.map((community, index) => (
-                <div
-                  key={index}
-                  className={`flex items-center gap-3 p-4 rounded-lg cursor-pointer transition-all ${
-                    selectedCategory === community
-                      ? "bg-primary/20 border-2 border-primary"
-                      : "bg-muted/50 hover:bg-muted"
-                  }`}
-                  onClick={() => setSelectedCategory(community)}
-                >
-                  <Heart className="w-5 h-5 text-primary flex-shrink-0" />
-                  <span>{community}</span>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -229,13 +187,13 @@ const BreakingBarriers = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label className="block text-sm font-medium mb-2">
-                  Tell us about your background and what barriers you're facing
+                  Tell us about yourself - your background, identity, and any barriers you're facing
                 </label>
                 <textarea
                   value={experience}
                   onChange={(e) => setExperience(e.target.value)}
-                  className="w-full min-h-[150px] px-4 py-3 rounded-md border border-input bg-background"
-                  placeholder="E.g., I'm a woman in my 40s wanting to transition into tech but worried about ageism and being taken seriously. I also have family responsibilities that make traditional education difficult..."
+                  className="w-full min-h-[200px] px-4 py-3 rounded-md border border-input bg-background"
+                  placeholder="Share as much detail as you're comfortable with. For example: 'I'm a 25-year-old gay man with cerebral palsy. I have to expend a lot of energy to complete simple tasks, which I find is a huge barrier in finding a job that can remunerate me properly. I worry about accessibility in tech workplaces and whether I'll be able to keep up with the pace...'"
                   disabled={isLoading}
                   required
                 />
@@ -311,7 +269,6 @@ const BreakingBarriers = () => {
                   <Button
                     onClick={() => {
                       setAdvice(null);
-                      setSelectedCategory("");
                       setExperience("");
                     }}
                     variant="outline"
