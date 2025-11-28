@@ -32,7 +32,7 @@ const Hero = () => {
 
           {/* Subheader Badge */}
           <div className="inline-block px-4 py-1.5 bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 border-l-4 border-r-4 border-secondary backdrop-blur-sm">
-            <p className="text-sm md:text-base font-medium text-muted-foreground">🌱 From Imposter to Belonger 🤝</p>
+            <p className="text-lg md:text-xl font-medium text-muted-foreground">🌱 From Imposter to Belonger 🤝</p>
           </div>
 
           {/* Subheadline */}
