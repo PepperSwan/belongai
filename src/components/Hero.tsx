@@ -7,12 +7,12 @@ const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image with Overlay */}
-      <div 
+      <div
         className="absolute inset-0 z-0"
         style={{
           backgroundImage: `url(${heroImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-br from-background/95 via-background/90 to-background/95" />
@@ -24,25 +24,27 @@ const Hero = () => {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm">
             <Zap className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium text-primary">The Duolingo of Tech Careers</span>
+            <span className="text-sm font-medium text-primary">From Imposter to Belonger</span>
           </div>
 
           {/* Headline */}
           <h1 className="text-5xl md:text-7xl font-bold leading-tight">
-            Master Your Dream{" "}
-            <span className="text-gradient">Tech Role</span>
+            Master Your Dream <span className="text-gradient">Tech Role</span>
           </h1>
 
           {/* Subheadline */}
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Learn through gamified, real-world tasks that simulate what professionals actually do every day. 
-            No experience needed.
+            Learn through gamified, real-world tasks that simulate what professionals actually do every day. No
+            experience needed.
           </p>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
             <Link to="/roles">
-              <Button size="lg" className="group bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all">
+              <Button
+                size="lg"
+                className="group bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all"
+              >
                 Start Learning
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
