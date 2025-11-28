@@ -3,13 +3,17 @@ import { ArrowRight, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-tech.jpg";
 const Hero = () => {
-  return <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+  return (
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image with Overlay */}
-      <div className="absolute inset-0 z-0" style={{
-      backgroundImage: `url(${heroImage})`,
-      backgroundSize: "cover",
-      backgroundPosition: "center"
-    }}>
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: `url(${heroImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
         <div className="absolute inset-0 bg-gradient-to-br from-background/95 via-background/90 to-background/95" />
       </div>
 
@@ -17,15 +21,13 @@ const Hero = () => {
       <div className="container relative z-10 px-4 py-20 md:py-32">
         <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
           {/* Logo */}
-          <div className="mb-4">
-            
-          </div>
+          <div className="mb-4"></div>
 
           {/* Badge - Angular/Geometric Style */}
-          
 
           {/* Headline */}
-          <h1 className="text-5xl md:text-7xl font-bold leading-tight">Belong Tech Role<span className="text-gradient">Tech Role</span>
+          <h1 className="text-5xl md:text-7xl font-bold leading-tight">
+            Belong<span className="text-gradient">AI</span>
           </h1>
 
           {/* Subheadline */}
@@ -37,7 +39,10 @@ const Hero = () => {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
             <Link to="/roles">
-              <Button size="lg" className="group bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all">
+              <Button
+                size="lg"
+                className="group bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all"
+              >
                 Start Learning
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
@@ -64,6 +69,7 @@ const Hero = () => {
           </div>
         </div>
       </div>
-    </section>;
+    </section>
+  );
 };
 export default Hero;
