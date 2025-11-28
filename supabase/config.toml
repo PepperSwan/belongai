@@ -2,3 +2,6 @@ project_id = "dapfgrkcmwwxsxgppmvp"
 
 [functions.analyze-skills]
 verify_jwt = false
+
+[functions.breaking-barriers-advice]
+verify_jwt = false
