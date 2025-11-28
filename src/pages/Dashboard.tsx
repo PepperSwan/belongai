@@ -86,7 +86,7 @@ const Dashboard = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button className="w-full">
+              <Button className="w-full" variant="secondary">
                 Explore Roles
               </Button>
             </CardContent>
