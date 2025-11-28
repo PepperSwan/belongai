@@ -35,7 +35,7 @@ const Hero = () => {
           {/* Subheadline */}
           <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Overcome imposter syndrome through gamified, real-world tasks that simulate what professionals actually do
-            every day. </br> No experience needed.
+            every day. <br /> No experience needed.
           </p>
 
           {/* CTA Buttons */}
