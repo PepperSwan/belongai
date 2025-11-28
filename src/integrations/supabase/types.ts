@@ -14,7 +14,132 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      breaking_barriers_results: {
+        Row: {
+          background_category: string
+          barriers: Json
+          created_at: string
+          encouragement: string
+          experience: string
+          id: string
+          resources: Json
+          strategies: Json
+          user_id: string
+        }
+        Insert: {
+          background_category: string
+          barriers: Json
+          created_at?: string
+          encouragement: string
+          experience: string
+          id?: string
+          resources: Json
+          strategies: Json
+          user_id: string
+        }
+        Update: {
+          background_category?: string
+          barriers?: Json
+          created_at?: string
+          encouragement?: string
+          experience?: string
+          id?: string
+          resources?: Json
+          strategies?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
+      learning_progress: {
+        Row: {
+          id: string
+          last_accessed: string
+          role: string
+          started_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          last_accessed?: string
+          role: string
+          started_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          last_accessed?: string
+          role?: string
+          started_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      path_match_results: {
+        Row: {
+          created_at: string
+          encouragement: string
+          experience: string
+          id: string
+          match_score: number
+          recommended_path: Json
+          skill_gaps: Json
+          skills: string
+          target_role: string
+          transferable_skills: Json
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          encouragement: string
+          experience: string
+          id?: string
+          match_score: number
+          recommended_path: Json
+          skill_gaps: Json
+          skills: string
+          target_role: string
+          transferable_skills: Json
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          encouragement?: string
+          experience?: string
+          id?: string
+          match_score?: number
+          recommended_path?: Json
+          skill_gaps?: Json
+          skills?: string
+          target_role?: string
+          transferable_skills?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
