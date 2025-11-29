@@ -3,12 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, XCircle, Trophy } from "lucide-react";
 import { useState } from "react";
+import ChartVisual from "./ChartVisual";
+
 interface QuestionInterfaceProps {
   question: {
     title: string;
     description: string;
     question: string;
-    options: Array<{ id: string; text: string }>;
+    options: Array<{ id: string; text: string; visual?: "line" | "bar" | "pie" | "scatter" | "area" }>;
     correctAnswer: string;
     explanation: string;
     points: number;
@@ -108,6 +110,9 @@ const QuestionInterface = ({ question, currentQuestion, totalQuestions, onNext, 
                       : "border-border hover:border-primary/50 hover:bg-muted/50"
                   } ${isChecked ? "cursor-not-allowed" : "cursor-pointer"}`}
                 >
+                  {option.visual && (
+                    <ChartVisual type={option.visual} className="mb-2" />
+                  )}
                   <div className="flex items-center justify-between">
                     <span className="font-medium">{option.text}</span>
                     {showCorrect && <CheckCircle2 className="w-5 h-5 text-success" />}
