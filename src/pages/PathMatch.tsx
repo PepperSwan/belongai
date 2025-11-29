@@ -232,7 +232,7 @@ const PathMatch = () => {
 
       toast({
         title: "Analysis Complete!",
-        description: "Your personalized path match is ready.",
+        description: "Your personalised path match is ready.",
       });
     } catch (error: any) {
       console.error("Error:", error);
