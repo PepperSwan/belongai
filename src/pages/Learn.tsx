@@ -20,6 +20,8 @@ const Learn = () => {
   const [courseId, setCourseId] = useState<string | null>(null);
   const [courseInfo, setCourseInfo] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [courseProgress, setCourseProgress] = useState<any>(null);
+  const [isCompleted, setIsCompleted] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -79,10 +81,21 @@ const Learn = () => {
             total_attempts: 0,
           },
         ]);
+        setCourseProgress({
+          questions_answered: 0,
+          total_questions: courseQuestions.length,
+          first_attempt_correct: 0,
+          total_attempts: 0,
+          completed_at: null,
+        });
       } else {
-        // Resume from where they left off (if not completed)
-        if (!progress.completed_at) {
-          setCurrentQuestionIndex(progress.questions_answered);
+        setCourseProgress(progress);
+        // Check if already completed
+        if (progress.completed_at) {
+          setIsCompleted(true);
+        } else {
+          // Resume from where they left off
+          setCurrentQuestionIndex(Math.min(progress.questions_answered, courseQuestions.length - 1));
         }
       }
     } catch (error) {
@@ -98,7 +111,7 @@ const Learn = () => {
   };
 
   const handleAnswerSubmit = async (isCorrect: boolean, isFirstAttempt: boolean) => {
-    if (!courseId || !user) return;
+    if (!courseId || !user || isCompleted) return;
 
     try {
       // Fetch current progress
@@ -111,17 +124,26 @@ const Learn = () => {
 
       if (fetchError) throw fetchError;
 
+      // Don't update if already completed
+      if (progress.completed_at) {
+        setIsCompleted(true);
+        return;
+      }
+
+      // Only increment if this question hasn't been answered yet
+      const shouldIncrementQuestion = progress.questions_answered === currentQuestionIndex;
+
       // Update progress
       const updatedProgress: any = {
-        questions_answered: progress.questions_answered + 1,
+        questions_answered: shouldIncrementQuestion ? progress.questions_answered + 1 : progress.questions_answered,
         first_attempt_correct: progress.first_attempt_correct + (isFirstAttempt && isCorrect ? 1 : 0),
         total_attempts: progress.total_attempts + 1,
         last_accessed: new Date().toISOString(),
       };
 
       // Check if course is completed
-      const isCompleted = updatedProgress.questions_answered >= questions.length;
-      if (isCompleted) {
+      const courseCompleted = updatedProgress.questions_answered >= questions.length;
+      if (courseCompleted) {
         updatedProgress.completed_at = new Date().toISOString();
       }
 
@@ -133,8 +155,11 @@ const Learn = () => {
 
       if (updateError) throw updateError;
 
+      setCourseProgress(updatedProgress);
+
       // If course completed, update streak and check for trophies
-      if (isCompleted) {
+      if (courseCompleted) {
+        setIsCompleted(true);
         await updateStreak();
         await checkAndAwardTrophies();
         
@@ -343,16 +368,55 @@ const Learn = () => {
     }
   };
 
+  const handleRetryCourse = async () => {
+    if (!courseId || !user) return;
+
+    try {
+      // Reset progress
+      const { error } = await supabase
+        .from("user_course_progress")
+        .update({
+          questions_answered: 0,
+          first_attempt_correct: 0,
+          total_attempts: 0,
+          completed_at: null,
+          last_accessed: new Date().toISOString(),
+        })
+        .eq("user_id", user.id)
+        .eq("course_id", courseId);
+
+      if (error) throw error;
+
+      // Reset state
+      setCurrentQuestionIndex(0);
+      setIsCompleted(false);
+      setCourseProgress({
+        questions_answered: 0,
+        first_attempt_correct: 0,
+        total_attempts: 0,
+        completed_at: null,
+      });
+
+      toast({
+        title: "Course Reset",
+        description: "Good luck with your retry!",
+      });
+    } catch (error) {
+      console.error("Error resetting course:", error);
+      toast({
+        title: "Error",
+        description: "Failed to reset course. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleNext = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      // Course completed, navigate back
-      toast({
-        title: "Course Completed!",
-        description: "Great job! Check your progress and trophies.",
-      });
-      navigate(`/courses/${courseInfo.role}`);
+      // All questions shown, completion handled in handleAnswerSubmit
+      setIsCompleted(true);
     }
   };
 
@@ -376,6 +440,75 @@ const Learn = () => {
             <Button>Back to Roles</Button>
           </Link>
         </Card>
+      </div>
+    );
+  }
+
+  // Show completion screen if completed
+  if (isCompleted && courseProgress) {
+    const accuracy = courseProgress.total_attempts > 0 
+      ? Math.round((courseProgress.first_attempt_correct / courseProgress.total_attempts) * 100)
+      : 0;
+
+    return (
+      <div className="min-h-screen bg-background">
+        <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
+          <div className="container px-4 py-4 flex items-center justify-between">
+            <Link to={`/courses/${courseInfo?.role || ""}`}>
+              <Button variant="ghost" size="sm">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Courses
+              </Button>
+            </Link>
+          </div>
+        </header>
+
+        <main className="container px-4 py-12">
+          <div className="max-w-2xl mx-auto space-y-6">
+            <Card className="card-base p-8 text-center border-success/50">
+              <div className="space-y-6">
+                <div className="flex justify-center">
+                  <Trophy className="w-16 h-16 text-success" />
+                </div>
+                <div className="space-y-2">
+                  <h2 className="text-3xl font-bold text-center">Course Completed!</h2>
+                  <p className="text-muted-foreground text-center">
+                    Congratulations on completing {courseInfo?.title}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 py-6">
+                  <div className="text-center">
+                    <p className="text-sm text-muted-foreground mb-1">Accuracy</p>
+                    <p className="text-2xl font-bold text-success">{accuracy}%</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-sm text-muted-foreground mb-1">Questions</p>
+                    <p className="text-2xl font-bold">
+                      {courseProgress.first_attempt_correct}/{courseProgress.total_questions}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => navigate("/course-progress")}
+                  >
+                    View Results
+                  </Button>
+                  <Button
+                    className="flex-1"
+                    onClick={handleRetryCourse}
+                  >
+                    Retry Course
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </main>
       </div>
     );
   }
