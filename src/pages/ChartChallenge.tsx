@@ -87,6 +87,7 @@ const ChartChallenge = () => {
   
   const [isComplete, setIsComplete] = useState(false);
   const [showHint, setShowHint] = useState(false);
+  const [showAnswer, setShowAnswer] = useState(false);
 
   // Draw chart on canvas
   useEffect(() => {
@@ -257,9 +258,11 @@ const ChartChallenge = () => {
     
     if (isCorrect) {
       setIsComplete(true);
+      setShowAnswer(false);
       toast.success("Perfect! You matched the chart correctly!");
     } else {
-      toast.error("Not quite right. Keep adjusting!");
+      setShowAnswer(true);
+      toast.error("Not quite right. The correct answer is shown below.");
     }
   };
 
@@ -274,6 +277,7 @@ const ChartChallenge = () => {
     );
     setIsComplete(false);
     setShowHint(false);
+    setShowAnswer(false);
   };
 
   return (
@@ -320,29 +324,48 @@ const ChartChallenge = () => {
               </div>
 
               <div className="space-y-4">
-                {slices.map((slice) => (
-                  <div key={slice.id} className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className="w-4 h-4 rounded-full flex-shrink-0"
-                        style={{ backgroundColor: slice.color }}
+                {slices.map((slice, index) => {
+                  const userValue = challenge.chartType === "pie" 
+                    ? Math.round((slice.value / slices.reduce((sum, s) => sum + s.value, 0)) * 100)
+                    : Math.round(slice.value);
+                  const targetValue = challenge.target[index];
+                  const isSliceCorrect = Math.abs(userValue - targetValue) <= challenge.tolerance;
+                  
+                  return (
+                    <div key={slice.id} className="space-y-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className="w-4 h-4 rounded-full flex-shrink-0"
+                            style={{ backgroundColor: slice.color }}
+                          />
+                          <span className="font-medium">{slice.label}</span>
+                        </div>
+                        <span className="text-sm text-muted-foreground">
+                          Your: {userValue}{challenge.chartType === "pie" ? "%" : ""}
+                        </span>
+                      </div>
+                      <input
+                        type="range"
+                        min="1"
+                        max={challenge.chartType === "pie" ? "80" : "100"}
+                        value={slice.value}
+                        onChange={(e) => handleSliderChange(slice.id, Number(e.target.value))}
+                        disabled={isComplete}
+                        className="w-full h-3 rounded-lg appearance-none cursor-pointer"
+                        style={{
+                          background: `linear-gradient(to right, ${slice.color} ${slice.value}%, hsl(var(--muted)) ${slice.value}%)`,
+                        }}
                       />
-                      <span className="font-medium">{slice.label}</span>
+                      {showAnswer && !isComplete && (
+                        <div className={`text-sm ${isSliceCorrect ? 'text-green-600' : 'text-red-500'}`}>
+                          Correct: {targetValue}{challenge.chartType === "pie" ? "%" : ""} 
+                          {isSliceCorrect ? ' ✓' : ` (off by ${Math.abs(userValue - targetValue)})`}
+                        </div>
+                      )}
                     </div>
-                    <input
-                      type="range"
-                      min="1"
-                      max={challenge.chartType === "pie" ? "80" : "100"}
-                      value={slice.value}
-                      onChange={(e) => handleSliderChange(slice.id, Number(e.target.value))}
-                      disabled={isComplete}
-                      className="w-full h-3 rounded-lg appearance-none cursor-pointer"
-                      style={{
-                        background: `linear-gradient(to right, ${slice.color} ${slice.value}%, hsl(var(--muted)) ${slice.value}%)`,
-                      }}
-                    />
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
