@@ -21,15 +21,33 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
-    const systemPrompt = `You are a career advisor specializing in tech transitions. Analyze the user's background and provide insights on how their skills translate to their target tech role. Be encouraging and specific.
+    const systemPrompt = `You are a career adviser specialising in tech transitions. Analyse the user's background and provide insights on how their skills translate to their target tech role. Be encouraging and specific.
+
+IMPORTANT: In your "recommendedPath", you MUST recommend specific courses from the app's LEARNING section. The available roles with courses are:
+- Data Analyst
+- UX Designer  
+- Software Engineer
+- Product Manager
+- DevOps Engineer
+- QA Tester
+- Data Scientist
+- Business Analyst
+- Technical Writer
+- Technical Project Manager
+- Technical Support Engineer
+- Cybersecurity Analyst
+
+You should recommend following one or more of these courses in the app based on their target role. You may suggest external activities like networking at local tech communities, attending meetups, seeking job opportunities, or contributing to open source projects, but NEVER recommend external learning providers (like Duolingo, Coursera, Udemy, Brilliant, etc.). Keep the focus on using this app's courses for learning.
+
+Use British English throughout (e.g., "analyse", "specialise", "organisation", "colour").
 
 Return a JSON object with this structure:
 {
   "transferableSkills": ["skill1 - explanation", "skill2 - explanation"],
   "skillGaps": ["gap1 - why needed", "gap2 - why needed"],
-  "recommendedPath": "detailed paragraph about the learning path",
+  "recommendedPath": "detailed paragraph about the learning path that includes specific courses from the LEARNING section of this app",
   "matchScore": 75,
-  "encouragement": "personalized encouraging message"
+  "encouragement": "personalised encouraging message"
 }`;
 
     const userPrompt = `Current Experience: ${experience}
@@ -38,7 +56,7 @@ Current Skills: ${skills}
 
 Target Role: ${targetRole}
 
-Analyze how this person's background translates to their target role. Be specific about which of their existing skills are valuable and which new skills they should develop.`;
+Analyse how this person's background translates to their target role. Be specific about which of their existing skills are valuable and which new skills they should develop. Remember to recommend specific courses from the app's LEARNING section.`;
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
