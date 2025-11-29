@@ -57,7 +57,7 @@ const challenges = {
     chartType: "bar" as ChartType,
     description: "Shape the rainfall amounts for each quarter. Think about typical weather patterns!",
     target: [65, 45, 25, 55],
-    labels: ["Q1 (Jan-Mar)", "Q2 (Apr-Jun)", "Q3 (Jul-Sep)", "Q4 (Oct-Dec)"],
+    labels: ["Q1: Jan, Feb, Mar", "Q2: Apr, May, Jun", "Q3: Jul, Aug, Sep", "Q4: Oct, Nov, Dec"],
     tolerance: 10,
   },
   hard: hardScenarios[Math.floor(Math.random() * hardScenarios.length)],
