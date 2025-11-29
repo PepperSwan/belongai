@@ -53,12 +53,12 @@ const challenges = {
     tolerance: 8,
   },
   medium: {
-    title: "Data Pattern Game",
+    title: "🌧️ Seasonal Rainfall",
     chartType: "bar" as ChartType,
-    description: "Set the bar heights to match the target values",
-    target: [40, 70, 55, 25],
-    labels: ["Q1", "Q2", "Q3", "Q4"],
-    tolerance: 8,
+    description: "Shape the rainfall amounts for each quarter. Think about typical weather patterns!",
+    target: [65, 45, 25, 55],
+    labels: ["Q1 (Jan-Mar)", "Q2 (Apr-Jun)", "Q3 (Jul-Sep)", "Q4 (Oct-Dec)"],
+    tolerance: 10,
   },
   hard: hardScenarios[Math.floor(Math.random() * hardScenarios.length)],
 };
