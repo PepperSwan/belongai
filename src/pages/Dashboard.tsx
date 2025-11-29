@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sparkles, BookOpen, LogOut, TrendingUp, Trophy, Flame, Hand } from "lucide-react";
+import { Sparkles, BookOpen, LogOut, TrendingUp, Trophy, Flame, Hand, Users, Award } from "lucide-react";
 import { Loader2 } from "lucide-react";
 
 const Dashboard = () => {
@@ -93,7 +93,7 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           <Card className="hover-lift transition-all cursor-pointer" onClick={() => navigate("/course-progress")}>
             <CardHeader>
               <TrendingUp className="h-10 w-10 mb-2 text-primary" />
@@ -135,6 +135,36 @@ const Dashboard = () => {
             <CardContent>
               <Button className="w-full">
                 View Streak
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="hover-lift transition-all cursor-pointer bg-gradient-to-br from-primary/5 to-secondary/5" onClick={() => navigate("/friends")}>
+            <CardHeader>
+              <Users className="h-10 w-10 mb-2 text-primary" />
+              <CardTitle>Friends</CardTitle>
+              <CardDescription>
+                Connect with other learners, compare progress, and motivate each other
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button className="w-full" variant="secondary">
+                View Friends
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="hover-lift transition-all cursor-pointer bg-gradient-to-br from-secondary/5 to-accent/5" onClick={() => navigate("/leaderboard")}>
+            <CardHeader>
+              <Award className="h-10 w-10 mb-2 text-secondary" />
+              <CardTitle>Leaderboard</CardTitle>
+              <CardDescription>
+                Celebrate the community's achievements and see where you rank
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button className="w-full" variant="secondary">
+                View Leaderboard
               </Button>
             </CardContent>
           </Card>

@@ -17,6 +17,8 @@ import CourseProgress from "./pages/CourseProgress";
 import TrophyShelf from "./pages/TrophyShelf";
 import Streak from "./pages/Streak";
 import ChartChallenge from "./pages/ChartChallenge";
+import Friends from "./pages/Friends";
+import Leaderboard from "./pages/Leaderboard";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +40,8 @@ const App = () => (
             <Route path="/course-progress" element={<CourseProgress />} />
             <Route path="/trophy-shelf" element={<TrophyShelf />} />
             <Route path="/streak" element={<Streak />} />
+            <Route path="/friends" element={<Friends />} />
+            <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/path-match" element={<PathMatch />} />
             <Route path="/breaking-barriers" element={<BreakingBarriers />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
