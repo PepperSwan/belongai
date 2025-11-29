@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, BookOpen, CheckCircle2, Loader2 } from "lucide-react";
+import { ArrowLeft, BookOpen, CheckCircle2, Loader2, Gamepad2 } from "lucide-react";
 
 interface Course {
   id: string;
@@ -114,6 +114,18 @@ const CourseList = () => {
     return course.title.toLowerCase().replace(/\s+/g, "-");
   };
 
+  const isGameCourse = (course: Course) => {
+    const gameKeywords = ["challenge", "game", "puzzle"];
+    return gameKeywords.some((keyword) => 
+      course.title.toLowerCase().includes(keyword)
+    );
+  };
+
+  const getCourseRoute = (course: Course) => {
+    const slug = getCourseSlug(course);
+    return isGameCourse(course) ? `/game/${slug}` : `/learn/${slug}`;
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -157,7 +169,7 @@ const CourseList = () => {
                     <Card
                       key={course.id}
                       className="hover-lift cursor-pointer transition-all"
-                      onClick={() => navigate(`/learn/${getCourseSlug(course)}`)}
+                      onClick={() => navigate(getCourseRoute(course))}
                     >
                       <CardHeader>
                         <div className="flex items-start justify-between">
@@ -170,7 +182,11 @@ const CourseList = () => {
                             </CardTitle>
                             <CardDescription>{course.description}</CardDescription>
                           </div>
-                          <BookOpen className="w-5 h-5 text-muted-foreground" />
+                          {isGameCourse(course) ? (
+                            <Gamepad2 className="w-5 h-5 text-primary" />
+                          ) : (
+                            <BookOpen className="w-5 h-5 text-muted-foreground" />
+                          )}
                         </div>
                       </CardHeader>
                       <CardContent>
@@ -217,7 +233,7 @@ const CourseList = () => {
                     <Card
                       key={course.id}
                       className="hover-lift cursor-pointer transition-all"
-                      onClick={() => navigate(`/learn/${getCourseSlug(course)}`)}
+                      onClick={() => navigate(getCourseRoute(course))}
                     >
                       <CardHeader>
                         <div className="flex items-start justify-between">
@@ -230,7 +246,11 @@ const CourseList = () => {
                             </CardTitle>
                             <CardDescription>{course.description}</CardDescription>
                           </div>
-                          <BookOpen className="w-5 h-5 text-muted-foreground" />
+                          {isGameCourse(course) ? (
+                            <Gamepad2 className="w-5 h-5 text-primary" />
+                          ) : (
+                            <BookOpen className="w-5 h-5 text-muted-foreground" />
+                          )}
                         </div>
                       </CardHeader>
                       <CardContent>
@@ -277,7 +297,7 @@ const CourseList = () => {
                     <Card
                       key={course.id}
                       className="hover-lift cursor-pointer transition-all"
-                      onClick={() => navigate(`/learn/${getCourseSlug(course)}`)}
+                      onClick={() => navigate(getCourseRoute(course))}
                     >
                       <CardHeader>
                         <div className="flex items-start justify-between">
@@ -290,7 +310,11 @@ const CourseList = () => {
                             </CardTitle>
                             <CardDescription>{course.description}</CardDescription>
                           </div>
-                          <BookOpen className="w-5 h-5 text-muted-foreground" />
+                          {isGameCourse(course) ? (
+                            <Gamepad2 className="w-5 h-5 text-primary" />
+                          ) : (
+                            <BookOpen className="w-5 h-5 text-muted-foreground" />
+                          )}
                         </div>
                       </CardHeader>
                       <CardContent>
