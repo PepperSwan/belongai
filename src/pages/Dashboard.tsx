@@ -86,7 +86,7 @@ const Dashboard = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button className="w-full" variant="secondary">
+              <Button className="w-full">
                 Explore Roles
               </Button>
             </CardContent>
@@ -103,7 +103,7 @@ const Dashboard = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button className="w-full" variant="secondary">
+              <Button className="w-full">
                 View Progress
               </Button>
             </CardContent>
@@ -118,7 +118,7 @@ const Dashboard = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button className="w-full" variant="secondary">
+              <Button className="w-full">
                 View Trophies
               </Button>
             </CardContent>
