@@ -6,7 +6,7 @@ interface ChartVisualProps {
 }
 
 const ChartVisual = ({ type, className = "" }: ChartVisualProps) => {
-  const baseClass = `w-full h-20 flex items-center justify-center rounded-md ${className}`;
+  const baseClass = `w-full h-14 flex items-center justify-center rounded-md ${className}`;
   
   switch (type) {
     case "line":
