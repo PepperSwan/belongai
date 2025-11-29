@@ -53,7 +53,7 @@ const BreakingBarriers = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!experience.trim()) {
       toast({
         title: "Missing Information",
@@ -77,17 +77,15 @@ const BreakingBarriers = () => {
       setAdvice(data.advice);
 
       // Save to database
-      const { error: saveError } = await supabase
-        .from("breaking_barriers_results")
-        .insert({
-          user_id: user?.id,
-          background_category: "User Input",
-          experience: experience,
-          barriers: data.advice.barriers,
-          strategies: data.advice.strategies,
-          resources: data.advice.resources,
-          encouragement: data.advice.encouragement,
-        });
+      const { error: saveError } = await supabase.from("breaking_barriers_results").insert({
+        user_id: user?.id,
+        background_category: "User Input",
+        experience: experience,
+        barriers: data.advice.barriers,
+        strategies: data.advice.strategies,
+        resources: data.advice.resources,
+        encouragement: data.advice.encouragement,
+      });
 
       if (saveError) throw saveError;
 
@@ -141,7 +139,8 @@ const BreakingBarriers = () => {
             <h1 className="text-4xl md:text-5xl font-bold">Breaking Barriers</h1>
           </div>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Share your unique background and experiences. Our AI will provide personalized advice for overcoming barriers in tech, tailored specifically to your situation.
+            Share your unique background and experiences. Our AI will provide personalized advice for overcoming
+            barriers in tech, tailored specifically to your situation.
           </p>
         </div>
 
@@ -167,9 +166,7 @@ const BreakingBarriers = () => {
                   }}
                 >
                   <p className="font-medium">{result.background_category}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {new Date(result.created_at).toLocaleDateString()}
-                  </p>
+                  <p className="text-sm text-muted-foreground">{new Date(result.created_at).toLocaleDateString()}</p>
                 </div>
               ))}
             </CardContent>
@@ -193,7 +190,7 @@ const BreakingBarriers = () => {
                   value={experience}
                   onChange={(e) => setExperience(e.target.value)}
                   className="w-full min-h-[200px] px-4 py-3 rounded-md border border-input bg-background"
-                  placeholder="Share as much detail as you're comfortable with. For example: 'I'm a 25-year-old gay man with cerebral palsy. I have to expend a lot of energy to complete simple tasks, which I find is a huge barrier in finding a job that can remunerate me properly. I worry about accessibility in tech workplaces and whether I'll be able to keep up with the pace...'"
+                  placeholder="Share as much detail as you're comfortable with: your age, your gender, your ethnicity, your sexuality, any disabilities or mental health conditions you may have, and how you believe those experiences have shaped you as a person."
                   disabled={isLoading}
                   required
                 />
@@ -276,10 +273,7 @@ const BreakingBarriers = () => {
                   >
                     Start New Assessment
                   </Button>
-                  <Button
-                    onClick={() => navigate("/path-match")}
-                    className="flex-1"
-                  >
+                  <Button onClick={() => navigate("/path-match")} className="flex-1">
                     Continue to Path Match →
                   </Button>
                 </div>
