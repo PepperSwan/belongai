@@ -7,7 +7,7 @@ export interface CourseQuestion {
   title: string;
   description: string;
   question: string;
-  options: Array<{ id: string; text: string }>;
+  options: Array<{ id: string; text: string; visual?: "line" | "bar" | "pie" | "scatter" | "area" }>;
   correctAnswer: string;
   explanation: string;
   points: number;
@@ -187,10 +187,10 @@ export const courseQuestions: Record<string, CourseQuestion[]> = {
       description: "You want to show how market share is divided among 5 competitors.",
       question: "Which chart type is most appropriate?",
       options: [
-        { id: "a", text: "Line chart" },
-        { id: "b", text: "Pie chart or bar chart" },
-        { id: "c", text: "Scatter plot" },
-        { id: "d", text: "Area chart" },
+        { id: "a", text: "Line chart", visual: "line" },
+        { id: "b", text: "Pie chart or bar chart", visual: "pie" },
+        { id: "c", text: "Scatter plot", visual: "scatter" },
+        { id: "d", text: "Area chart", visual: "area" },
       ],
       correctAnswer: "b",
       explanation: "Pie charts or bar charts are ideal for showing parts of a whole (market share distribution). They make it easy to compare proportions.",
