@@ -6,7 +6,22 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Sparkles, CheckCircle, AlertCircle, TrendingUp, Target, Loader2 } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Sparkles, CheckCircle, AlertCircle, TrendingUp, Target, Loader2, ChevronRight, ChevronLeft } from "lucide-react";
+
+interface FormData {
+  education: string;
+  educationDetails: string;
+  industries: string[];
+  careerDetails: string;
+  skills: string[];
+  skillsDetails: string;
+  techRoles: string[];
+  techRolesDetails: string;
+}
 
 interface AnalysisResult {
   matchScore: number;
@@ -16,10 +31,74 @@ interface AnalysisResult {
   encouragement: string;
 }
 
+const EDUCATION_OPTIONS = [
+  { value: "gcse", label: "GCSEs or equivalent" },
+  { value: "alevels", label: "A-Levels or equivalent" },
+  { value: "baccalaureate", label: "Baccalaureate" },
+  { value: "apprenticeship", label: "Apprenticeship" },
+  { value: "bachelors", label: "Bachelor's Degree" },
+  { value: "masters", label: "Master's Degree" },
+  { value: "postgrad", label: "Postgraduate/PhD" },
+  { value: "other", label: "Other" },
+];
+
+const INDUSTRY_OPTIONS = [
+  { value: "retail", label: "Retail" },
+  { value: "healthcare", label: "Healthcare" },
+  { value: "education", label: "Education" },
+  { value: "finance", label: "Finance & Banking" },
+  { value: "hospitality", label: "Hospitality & Tourism" },
+  { value: "creative", label: "Creative Arts & Media" },
+  { value: "engineering", label: "Engineering & Manufacturing" },
+  { value: "customer_service", label: "Customer Service" },
+  { value: "public_sector", label: "Public Sector" },
+  { value: "nonprofit", label: "Non-profit" },
+  { value: "construction", label: "Construction & Trades" },
+  { value: "transport", label: "Transport & Logistics" },
+];
+
+const SKILLS_OPTIONS = [
+  { value: "communication", label: "Communication" },
+  { value: "problem_solving", label: "Problem Solving" },
+  { value: "project_management", label: "Project Management" },
+  { value: "data_analysis", label: "Data Analysis" },
+  { value: "design", label: "Design & Creativity" },
+  { value: "writing", label: "Writing & Content" },
+  { value: "customer_service", label: "Customer Service" },
+  { value: "leadership", label: "Leadership & Team Management" },
+  { value: "research", label: "Research & Analysis" },
+  { value: "organization", label: "Organization & Planning" },
+  { value: "teaching", label: "Teaching & Training" },
+  { value: "sales", label: "Sales & Negotiation" },
+];
+
+const TECH_ROLES_OPTIONS = [
+  { value: "data_analyst", label: "Data Analyst" },
+  { value: "ux_designer", label: "UX/UI Designer" },
+  { value: "software_engineer", label: "Software Engineer" },
+  { value: "product_manager", label: "Product Manager" },
+  { value: "devops", label: "DevOps Engineer" },
+  { value: "qa_tester", label: "QA Tester" },
+  { value: "data_scientist", label: "Data Scientist" },
+  { value: "business_analyst", label: "Business Analyst" },
+  { value: "technical_writer", label: "Technical Writer" },
+  { value: "project_manager", label: "Technical Project Manager" },
+  { value: "support_engineer", label: "Technical Support Engineer" },
+  { value: "cybersecurity", label: "Cybersecurity Analyst" },
+];
+
 const PathMatch = () => {
-  const [experience, setExperience] = useState("");
-  const [skills, setSkills] = useState("");
-  const [targetRole, setTargetRole] = useState("");
+  const [currentStep, setCurrentStep] = useState(1);
+  const [formData, setFormData] = useState<FormData>({
+    education: "",
+    educationDetails: "",
+    industries: [],
+    careerDetails: "",
+    skills: [],
+    skillsDetails: "",
+    techRoles: [],
+    techRolesDetails: "",
+  });
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [previousResults, setPreviousResults] = useState<any[]>([]);
@@ -27,6 +106,9 @@ const PathMatch = () => {
   const { toast } = useToast();
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+
+  const totalSteps = 4;
+  const progress = (currentStep / totalSteps) * 100;
 
   useEffect(() => {
     if (!loading && !user) {
@@ -55,13 +137,47 @@ const PathMatch = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!experience.trim() || !skills.trim() || !targetRole.trim()) {
+  const handleCheckboxChange = (field: keyof FormData, value: string, checked: boolean) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: checked
+        ? [...(prev[field] as string[]), value]
+        : (prev[field] as string[]).filter((item) => item !== value),
+    }));
+  };
+
+  const canProceed = () => {
+    switch (currentStep) {
+      case 1:
+        return formData.education !== "";
+      case 2:
+        return formData.industries.length > 0;
+      case 3:
+        return formData.skills.length > 0;
+      case 4:
+        return formData.techRoles.length > 0;
+      default:
+        return false;
+    }
+  };
+
+  const handleNext = () => {
+    if (canProceed() && currentStep < totalSteps) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!canProceed()) {
       toast({
-        title: "Missing Information",
-        description: "Please fill out all fields to get your path match analysis.",
+        title: "Incomplete Information",
+        description: "Please complete all required fields.",
         variant: "destructive",
       });
       return;
@@ -70,11 +186,24 @@ const PathMatch = () => {
     setIsLoading(true);
 
     try {
+      // Format data for AI analysis
+      const educationText = `Education: ${EDUCATION_OPTIONS.find(e => e.value === formData.education)?.label || formData.education}. ${formData.educationDetails}`;
+      
+      const industriesText = `Career history in industries: ${formData.industries.map(i => INDUSTRY_OPTIONS.find(opt => opt.value === i)?.label).join(", ")}. Details: ${formData.careerDetails}`;
+      
+      const skillsText = `Skills: ${formData.skills.map(s => SKILLS_OPTIONS.find(opt => opt.value === s)?.label).join(", ")}. Additional skills: ${formData.skillsDetails}`;
+      
+      const rolesText = `Interested in roles: ${formData.techRoles.map(r => TECH_ROLES_OPTIONS.find(opt => opt.value === r)?.label).join(", ")}. Additional interests: ${formData.techRolesDetails}`;
+
+      const combinedExperience = `${educationText} ${industriesText}`;
+      const combinedSkills = skillsText;
+      const combinedTargetRole = rolesText;
+
       const { data, error } = await supabase.functions.invoke("analyze-skills", {
         body: {
-          experience,
-          skills,
-          targetRole,
+          experience: combinedExperience,
+          skills: combinedSkills,
+          targetRole: combinedTargetRole,
         },
       });
 
@@ -87,9 +216,9 @@ const PathMatch = () => {
         .from("path_match_results")
         .insert({
           user_id: user?.id,
-          experience,
-          skills,
-          target_role: targetRole,
+          experience: combinedExperience,
+          skills: combinedSkills,
+          target_role: combinedTargetRole,
           match_score: data.analysis.matchScore,
           transferable_skills: data.analysis.transferableSkills,
           skill_gaps: data.analysis.skillGaps,
@@ -109,7 +238,7 @@ const PathMatch = () => {
       console.error("Error:", error);
       toast({
         title: "Error",
-        description: error.message || "Failed to analyze skills. Please try again.",
+        description: error.message || "Failed to analyze. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -129,6 +258,96 @@ const PathMatch = () => {
     return null;
   }
 
+  if (analysis) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background py-12 px-4">
+        <div className="container mx-auto max-w-4xl">
+          <Button variant="outline" onClick={() => navigate("/dashboard")} className="mb-8">
+            ← Back to Dashboard
+          </Button>
+
+          <div className="space-y-6 animate-fade-in">
+            <div className="card-base p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-bold flex items-center gap-2">
+                  <Target className="w-6 h-6 text-primary" />
+                  Your Match Score
+                </h3>
+                <span className="text-3xl font-bold text-primary">{analysis.matchScore}%</span>
+              </div>
+              <Progress value={analysis.matchScore} className="h-3" />
+              <p className="text-muted-foreground mt-4">{analysis.encouragement}</p>
+            </div>
+
+            <div className="card-base p-6">
+              <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                <CheckCircle className="w-6 h-6 text-success" />
+                Your Transferable Skills
+              </h3>
+              <ul className="space-y-3">
+                {analysis.transferableSkills.map((skill, index) => (
+                  <li key={index} className="flex gap-3">
+                    <CheckCircle className="w-5 h-5 text-success flex-shrink-0 mt-0.5" />
+                    <span>{skill}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="card-base p-6">
+              <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                <AlertCircle className="w-6 h-6 text-secondary" />
+                Skills to Develop
+              </h3>
+              <ul className="space-y-3">
+                {analysis.skillGaps.map((gap, index) => (
+                  <li key={index} className="flex gap-3">
+                    <AlertCircle className="w-5 h-5 text-secondary flex-shrink-0 mt-0.5" />
+                    <span>{gap}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="card-base p-6">
+              <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+                <TrendingUp className="w-6 h-6 text-primary" />
+                Your Recommended Learning Path
+              </h3>
+              <p className="text-muted-foreground leading-relaxed">{analysis.recommendedPath}</p>
+            </div>
+
+            <div className="flex gap-4 mt-8">
+              <Button
+                onClick={() => {
+                  setAnalysis(null);
+                  setCurrentStep(1);
+                  setFormData({
+                    education: "",
+                    educationDetails: "",
+                    industries: [],
+                    careerDetails: "",
+                    skills: [],
+                    skillsDetails: "",
+                    techRoles: [],
+                    techRolesDetails: "",
+                  });
+                }}
+                variant="outline"
+                className="flex-1"
+              >
+                Start New Analysis
+              </Button>
+              <Button onClick={() => navigate("/roles")} className="flex-1">
+                Continue to Learning →
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background py-12 px-4">
       <div className="container mx-auto max-w-4xl">
@@ -143,14 +362,22 @@ const PathMatch = () => {
           )}
         </div>
 
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 mb-4">
             <Sparkles className="w-10 h-10 text-primary" />
             <h1 className="text-4xl md:text-5xl font-bold">Find Your Path Match</h1>
           </div>
           <p className="text-xl text-muted-foreground">
-            Discover how your skills translate to tech roles
+            Discover how your background translates to tech roles
           </p>
+        </div>
+
+        <div className="mb-8">
+          <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
+            <span>Step {currentStep} of {totalSteps}</span>
+            <span>{Math.round(progress)}%</span>
+          </div>
+          <Progress value={progress} className="h-2" />
         </div>
 
         {showPrevious && previousResults.length > 0 && (
@@ -171,13 +398,10 @@ const PathMatch = () => {
                       recommendedPath: result.recommended_path,
                       encouragement: result.encouragement,
                     });
-                    setExperience(result.experience);
-                    setSkills(result.skills);
-                    setTargetRole(result.target_role);
                     setShowPrevious(false);
                   }}
                 >
-                  <p className="font-medium">{result.target_role}</p>
+                  <p className="font-medium">Tech Path Analysis</p>
                   <p className="text-sm text-muted-foreground">
                     Match Score: {result.match_score}% • {new Date(result.created_at).toLocaleDateString()}
                   </p>
@@ -189,141 +413,174 @@ const PathMatch = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Tell us about yourself</CardTitle>
+            <CardTitle>
+              {currentStep === 1 && "What's your education level?"}
+              {currentStep === 2 && "What's your career history?"}
+              {currentStep === 3 && "What skills do you have?"}
+              {currentStep === 4 && "Which tech roles interest you?"}
+            </CardTitle>
           </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  What's your current experience level?
-                </label>
-                <textarea
-                  value={experience}
-                  onChange={(e) => setExperience(e.target.value)}
-                  className="w-full min-h-[100px] px-4 py-3 rounded-md border border-input bg-background"
-                  placeholder="E.g., I've worked in customer service for 3 years, managed social media for small businesses..."
-                  disabled={isLoading}
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  What skills do you already have?
-                </label>
-                <textarea
-                  value={skills}
-                  onChange={(e) => setSkills(e.target.value)}
-                  className="w-full min-h-[100px] px-4 py-3 rounded-md border border-input bg-background"
-                  placeholder="E.g., Communication, problem-solving, basic Excel, organizing events..."
-                  disabled={isLoading}
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  What tech role are you interested in?
-                </label>
-                <textarea
-                  value={targetRole}
-                  onChange={(e) => setTargetRole(e.target.value)}
-                  className="w-full min-h-[100px] px-4 py-3 rounded-md border border-input bg-background"
-                  placeholder="E.g., Product Manager, UX Designer, Data Analyst..."
-                  disabled={isLoading}
-                  required
-                />
-              </div>
-
-              <Button type="submit" size="lg" className="w-full" disabled={isLoading}>
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 w-5 h-5 animate-spin" />
-                    Analyzing...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="mr-2 w-5 h-5" />
-                    Find My Path Match
-                  </>
-                )}
-              </Button>
-            </form>
-
-            {analysis && (
-              <div className="space-y-6 mt-8 animate-fade-in">
-                <div className="card-base p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xl font-bold flex items-center gap-2">
-                      <Target className="w-6 h-6 text-primary" />
-                      Your Match Score
-                    </h3>
-                    <span className="text-3xl font-bold text-primary">{analysis.matchScore}%</span>
-                  </div>
-                  <Progress value={analysis.matchScore} className="h-3" />
-                  <p className="text-muted-foreground mt-4">{analysis.encouragement}</p>
-                </div>
-
-                <div className="card-base p-6">
-                  <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                    <CheckCircle className="w-6 h-6 text-success" />
-                    Your Transferable Skills
-                  </h3>
-                  <ul className="space-y-3">
-                    {analysis.transferableSkills.map((skill, index) => (
-                      <li key={index} className="flex gap-3">
-                        <CheckCircle className="w-5 h-5 text-success flex-shrink-0 mt-0.5" />
-                        <span>{skill}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="card-base p-6">
-                  <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                    <AlertCircle className="w-6 h-6 text-secondary" />
-                    Skills to Develop
-                  </h3>
-                  <ul className="space-y-3">
-                    {analysis.skillGaps.map((gap, index) => (
-                      <li key={index} className="flex gap-3">
-                        <AlertCircle className="w-5 h-5 text-secondary flex-shrink-0 mt-0.5" />
-                        <span>{gap}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="card-base p-6">
-                  <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                    <TrendingUp className="w-6 h-6 text-primary" />
-                    Your Recommended Learning Path
-                  </h3>
-                  <p className="text-muted-foreground leading-relaxed">{analysis.recommendedPath}</p>
-                </div>
-
-                <div className="flex gap-4 mt-8">
-                  <Button
-                    onClick={() => {
-                      setAnalysis(null);
-                      setExperience("");
-                      setSkills("");
-                      setTargetRole("");
-                    }}
-                    variant="outline"
-                    className="flex-1"
-                  >
-                    Start New Analysis
-                  </Button>
-                  <Button
-                    onClick={() => navigate("/roles")}
-                    className="flex-1"
-                  >
-                    Continue to Learning →
-                  </Button>
+          <CardContent className="space-y-6">
+            {currentStep === 1 && (
+              <div className="space-y-4">
+                <RadioGroup
+                  value={formData.education}
+                  onValueChange={(value) => setFormData({ ...formData, education: value })}
+                >
+                  {EDUCATION_OPTIONS.map((option) => (
+                    <div key={option.value} className="flex items-center space-x-2">
+                      <RadioGroupItem value={option.value} id={option.value} />
+                      <Label htmlFor={option.value} className="cursor-pointer">
+                        {option.label}
+                      </Label>
+                    </div>
+                  ))}
+                </RadioGroup>
+                <div>
+                  <Label htmlFor="education-details">Additional information (optional)</Label>
+                  <Textarea
+                    id="education-details"
+                    value={formData.educationDetails}
+                    onChange={(e) => setFormData({ ...formData, educationDetails: e.target.value })}
+                    placeholder="Add any relevant details about your education..."
+                    className="mt-2"
+                  />
                 </div>
               </div>
             )}
+
+            {currentStep === 2 && (
+              <div className="space-y-4">
+                <p className="text-sm text-muted-foreground">Select all industries you've worked in:</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {INDUSTRY_OPTIONS.map((option) => (
+                    <div key={option.value} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={option.value}
+                        checked={formData.industries.includes(option.value)}
+                        onCheckedChange={(checked) =>
+                          handleCheckboxChange("industries", option.value, checked as boolean)
+                        }
+                      />
+                      <Label htmlFor={option.value} className="cursor-pointer">
+                        {option.label}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <Label htmlFor="career-details">Tell us about your roles and responsibilities</Label>
+                  <Textarea
+                    id="career-details"
+                    value={formData.careerDetails}
+                    onChange={(e) => setFormData({ ...formData, careerDetails: e.target.value })}
+                    placeholder="E.g., Managed a team of 5, handled customer complaints, organized events..."
+                    className="mt-2 min-h-[100px]"
+                  />
+                </div>
+              </div>
+            )}
+
+            {currentStep === 3 && (
+              <div className="space-y-4">
+                <p className="text-sm text-muted-foreground">Select all skills you have:</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {SKILLS_OPTIONS.map((option) => (
+                    <div key={option.value} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={option.value}
+                        checked={formData.skills.includes(option.value)}
+                        onCheckedChange={(checked) =>
+                          handleCheckboxChange("skills", option.value, checked as boolean)
+                        }
+                      />
+                      <Label htmlFor={option.value} className="cursor-pointer">
+                        {option.label}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <Label htmlFor="skills-details">Additional skills (technical, languages, etc.)</Label>
+                  <Textarea
+                    id="skills-details"
+                    value={formData.skillsDetails}
+                    onChange={(e) => setFormData({ ...formData, skillsDetails: e.target.value })}
+                    placeholder="E.g., Basic Excel, Spanish fluent, Photoshop, HTML/CSS..."
+                    className="mt-2"
+                  />
+                </div>
+              </div>
+            )}
+
+            {currentStep === 4 && (
+              <div className="space-y-4">
+                <p className="text-sm text-muted-foreground">Select all roles that interest you:</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {TECH_ROLES_OPTIONS.map((option) => (
+                    <div key={option.value} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={option.value}
+                        checked={formData.techRoles.includes(option.value)}
+                        onCheckedChange={(checked) =>
+                          handleCheckboxChange("techRoles", option.value, checked as boolean)
+                        }
+                      />
+                      <Label htmlFor={option.value} className="cursor-pointer">
+                        {option.label}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <Label htmlFor="roles-details">Any other tech roles you're curious about?</Label>
+                  <Textarea
+                    id="roles-details"
+                    value={formData.techRolesDetails}
+                    onChange={(e) => setFormData({ ...formData, techRolesDetails: e.target.value })}
+                    placeholder="E.g., Machine Learning Engineer, Cloud Architect, Blockchain Developer..."
+                    className="mt-2"
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className="flex gap-3 pt-4">
+              {currentStep > 1 && (
+                <Button onClick={handleBack} variant="outline" className="flex-1">
+                  <ChevronLeft className="w-4 h-4 mr-2" />
+                  Back
+                </Button>
+              )}
+              {currentStep < totalSteps ? (
+                <Button
+                  onClick={handleNext}
+                  disabled={!canProceed()}
+                  className="flex-1"
+                >
+                  Next
+                  <ChevronRight className="w-4 h-4 ml-2" />
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleSubmit}
+                  disabled={!canProceed() || isLoading}
+                  className="flex-1"
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Analyzing...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      Get My Path Match
+                    </>
+                  )}
+                </Button>
+              )}
+            </div>
           </CardContent>
         </Card>
       </div>
