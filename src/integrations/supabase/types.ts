@@ -125,6 +125,42 @@ export type Database = {
         }
         Relationships: []
       }
+      friendships: {
+        Row: {
+          created_at: string | null
+          friend_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          friend_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          friend_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "friendships_friend_id_fkey"
+            columns: ["friend_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "friendships_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       learning_progress: {
         Row: {
           id: string
@@ -195,6 +231,7 @@ export type Database = {
         Row: {
           created_at: string
           email: string
+          friend_code: string | null
           full_name: string | null
           id: string
           updated_at: string
@@ -202,6 +239,7 @@ export type Database = {
         Insert: {
           created_at?: string
           email: string
+          friend_code?: string | null
           full_name?: string | null
           id: string
           updated_at?: string
@@ -209,6 +247,7 @@ export type Database = {
         Update: {
           created_at?: string
           email?: string
+          friend_code?: string | null
           full_name?: string | null
           id?: string
           updated_at?: string
@@ -356,7 +395,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_friend_code: { Args: never; Returns: string }
     }
     Enums: {
       [_ in never]: never
