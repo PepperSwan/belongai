@@ -89,7 +89,7 @@ const QuestionInterface = ({ question, currentQuestion, totalQuestions, onNext, 
           <p className="font-semibold text-lg">{question.question}</p>
 
           {/* Options */}
-          <div className="space-y-2">
+          <div className={`${question.options.some(o => o.visual) ? "grid grid-cols-2 gap-3" : "space-y-2"}`}>
             {question.options.map((option) => {
               const isSelected = selectedAnswer === option.id;
               const showCorrect = isChecked && option.id === question.correctAnswer;
@@ -100,7 +100,7 @@ const QuestionInterface = ({ question, currentQuestion, totalQuestions, onNext, 
                   key={option.id}
                   onClick={() => !isChecked && setSelectedAnswer(option.id)}
                   disabled={isChecked}
-                  className={`w-full p-4 rounded-lg border-2 text-left transition-all ${
+                  className={`w-full ${option.visual ? "p-3" : "p-4"} rounded-lg border-2 text-left transition-all ${
                     showCorrect
                       ? "border-success bg-success/10"
                       : showWrong
@@ -111,12 +111,12 @@ const QuestionInterface = ({ question, currentQuestion, totalQuestions, onNext, 
                   } ${isChecked ? "cursor-not-allowed" : "cursor-pointer"}`}
                 >
                   {option.visual && (
-                    <ChartVisual type={option.visual} className="mb-2" />
+                    <ChartVisual type={option.visual} className="mb-2 h-14" />
                   )}
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium">{option.text}</span>
-                    {showCorrect && <CheckCircle2 className="w-5 h-5 text-success" />}
-                    {showWrong && <XCircle className="w-5 h-5 text-destructive" />}
+                  <div className="flex items-center justify-between gap-1">
+                    <span className={`font-medium ${option.visual ? "text-sm" : ""}`}>{option.text}</span>
+                    {showCorrect && <CheckCircle2 className="w-4 h-4 text-success flex-shrink-0" />}
+                    {showWrong && <XCircle className="w-4 h-4 text-destructive flex-shrink-0" />}
                   </div>
                 </button>
               );
