@@ -37,6 +37,7 @@ const Leaderboard = () => {
     if (user) {
       loadLeaderboards();
       loadCommunityStats();
+      checkTopOfClassTrophy();
     }
   }, [user]);
 
@@ -170,6 +171,77 @@ const Leaderboard = () => {
       console.error("Error loading leaderboards:", error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const checkTopOfClassTrophy = async () => {
+    if (!user) return;
+
+    try {
+      // Get user's friends
+      const { data: friendships } = await supabase
+        .from("friendships")
+        .select("friend_id")
+        .eq("user_id", user.id);
+
+      if (!friendships || friendships.length === 0) return;
+
+      const friendIds = friendships.map(f => f.friend_id);
+      const allUserIds = [...friendIds, user.id];
+
+      // Get trophy counts for user and friends
+      const { data: trophies } = await supabase
+        .from("user_trophies")
+        .select("user_id")
+        .in("user_id", allUserIds);
+
+      if (!trophies) return;
+
+      const trophyCount = trophies.reduce((acc: any, t: any) => {
+        acc[t.user_id] = (acc[t.user_id] || 0) + 1;
+        return acc;
+      }, {});
+
+      const userTrophyCount = trophyCount[user.id] || 0;
+      const isTopOfClass = Object.entries(trophyCount).every(
+        ([userId, count]: [string, any]) => 
+          userId === user.id || count < userTrophyCount
+      );
+
+      if (isTopOfClass && userTrophyCount > 0) {
+        await awardTrophyByName("Top of the Class");
+      }
+    } catch (error) {
+      console.error("Error checking Top of the Class trophy:", error);
+    }
+  };
+
+  const awardTrophyByName = async (trophyName: string) => {
+    if (!user) return;
+
+    try {
+      const { data: trophy } = await supabase
+        .from("trophies")
+        .select("id")
+        .eq("name", trophyName)
+        .single();
+
+      if (!trophy) return;
+
+      const { data: existing } = await supabase
+        .from("user_trophies")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("trophy_id", trophy.id)
+        .maybeSingle();
+
+      if (existing) return;
+
+      await supabase
+        .from("user_trophies")
+        .insert({ user_id: user.id, trophy_id: trophy.id });
+    } catch (error) {
+      console.error("Error awarding trophy:", error);
     }
   };
 

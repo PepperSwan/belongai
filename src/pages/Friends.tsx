@@ -239,6 +239,9 @@ const Friends = () => {
 
       if (addError1 || addError2) throw addError1 || addError2;
 
+      // Award Social Butterfly trophy for first friend
+      await checkAndAwardFriendTrophies();
+
       toast.success("Friend added successfully!");
       setInputCode("");
       loadFriends();
@@ -272,6 +275,64 @@ const Friends = () => {
     } catch (error: any) {
       console.error("Error removing friend:", error);
       toast.error("Failed to remove friend");
+    }
+  };
+
+  const checkAndAwardFriendTrophies = async () => {
+    if (!user) return;
+
+    try {
+      // Count total friends
+      const { data: friendships } = await supabase
+        .from("friendships")
+        .select("id")
+        .eq("user_id", user.id);
+
+      const friendCount = friendships?.length || 0;
+
+      // Award based on friend count
+      if (friendCount >= 1) {
+        await awardTrophyByName("Social Butterfly");
+      }
+      if (friendCount >= 5) {
+        await awardTrophyByName("Social Circle");
+      }
+    } catch (error) {
+      console.error("Error checking friend trophies:", error);
+    }
+  };
+
+  const awardTrophyByName = async (trophyName: string) => {
+    if (!user) return;
+
+    try {
+      // Get trophy
+      const { data: trophy } = await supabase
+        .from("trophies")
+        .select("id")
+        .eq("name", trophyName)
+        .single();
+
+      if (!trophy) return;
+
+      // Check if already awarded
+      const { data: existing } = await supabase
+        .from("user_trophies")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("trophy_id", trophy.id)
+        .maybeSingle();
+
+      if (existing) return;
+
+      // Award trophy
+      await supabase
+        .from("user_trophies")
+        .insert({ user_id: user.id, trophy_id: trophy.id });
+
+      toast.success(`🏆 New trophy unlocked: ${trophyName}!`);
+    } catch (error) {
+      console.error("Error awarding trophy:", error);
     }
   };
 

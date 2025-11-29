@@ -214,6 +214,16 @@ const Learn = () => {
           return; // Already counted for today
         }
 
+        // Check for Comeback Kid trophy (returned after 7+ days)
+        if (lastActivity) {
+          const daysSinceLastActivity = Math.floor(
+            (today.getTime() - lastActivity.getTime()) / (1000 * 60 * 60 * 24)
+          );
+          if (daysSinceLastActivity >= 7) {
+            await awardTrophyByName("Comeback Kid");
+          }
+        }
+
         // Check if yesterday
         const yesterday = new Date(today);
         yesterday.setDate(yesterday.getDate() - 1);
@@ -323,6 +333,33 @@ const Learn = () => {
       } else if (hour >= 22) {
         await awardTrophyByName("Night Owl");
       }
+
+      // Check for Weekend Warrior (Saturday or Sunday)
+      const dayOfWeek = now.getDay();
+      if (dayOfWeek === 0 || dayOfWeek === 6) {
+        await awardTrophyByName("Weekend Warrior");
+      }
+
+      // Check for Perfect Score (100% accuracy on first attempt)
+      if (courseProgress) {
+        const accuracy = courseProgress.total_questions > 0 
+          ? (courseProgress.first_attempt_correct / courseProgress.total_questions) * 100
+          : 0;
+        
+        if (accuracy === 100) {
+          await awardTrophyByName("Perfect Score");
+        }
+      }
+
+      // Check for Trophy Hunter (10 trophies)
+      const { data: userTrophies } = await supabase
+        .from("user_trophies")
+        .select("id")
+        .eq("user_id", user.id);
+
+      if (userTrophies && userTrophies.length >= 10) {
+        await awardTrophyByName("Trophy Hunter");
+      }
     } catch (error) {
       console.error("Error checking trophies:", error);
     }
@@ -363,6 +400,18 @@ const Learn = () => {
         title: `🏆 Trophy Earned!`,
         description: `You earned the "${trophyName}" trophy!`,
       });
+
+      // Check for Trophy Hunter (but don't create infinite loop)
+      if (trophyName !== "Trophy Hunter") {
+        const { data: userTrophies } = await supabase
+          .from("user_trophies")
+          .select("id")
+          .eq("user_id", user.id);
+
+        if (userTrophies && userTrophies.length >= 10) {
+          await awardTrophyByName("Trophy Hunter");
+        }
+      }
     } catch (error) {
       console.error("Error awarding trophy:", error);
     }
