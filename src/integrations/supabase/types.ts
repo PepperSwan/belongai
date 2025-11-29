@@ -16,35 +16,77 @@ export type Database = {
     Tables: {
       breaking_barriers_results: {
         Row: {
+          additional_info: string | null
+          age_range: string | null
           background_category: string
           barriers: Json
+          childhood_hobbies: string[] | null
           created_at: string
+          disability_details: string | null
+          disability_status: string | null
           encouragement: string
+          ethnicity: string[] | null
           experience: string
+          family_university: boolean | null
+          gender: string | null
+          household_income_age14: string | null
           id: string
+          location_grew_up: string | null
+          neurodiversity_details: string | null
+          neurodiversity_status: string | null
+          parent_occupation_age14: string | null
           resources: Json
+          sexuality: string | null
           strategies: Json
           user_id: string
         }
         Insert: {
+          additional_info?: string | null
+          age_range?: string | null
           background_category: string
           barriers: Json
+          childhood_hobbies?: string[] | null
           created_at?: string
+          disability_details?: string | null
+          disability_status?: string | null
           encouragement: string
+          ethnicity?: string[] | null
           experience: string
+          family_university?: boolean | null
+          gender?: string | null
+          household_income_age14?: string | null
           id?: string
+          location_grew_up?: string | null
+          neurodiversity_details?: string | null
+          neurodiversity_status?: string | null
+          parent_occupation_age14?: string | null
           resources: Json
+          sexuality?: string | null
           strategies: Json
           user_id: string
         }
         Update: {
+          additional_info?: string | null
+          age_range?: string | null
           background_category?: string
           barriers?: Json
+          childhood_hobbies?: string[] | null
           created_at?: string
+          disability_details?: string | null
+          disability_status?: string | null
           encouragement?: string
+          ethnicity?: string[] | null
           experience?: string
+          family_university?: boolean | null
+          gender?: string | null
+          household_income_age14?: string | null
           id?: string
+          location_grew_up?: string | null
+          neurodiversity_details?: string | null
+          neurodiversity_status?: string | null
+          parent_occupation_age14?: string | null
           resources?: Json
+          sexuality?: string | null
           strategies?: Json
           user_id?: string
         }
