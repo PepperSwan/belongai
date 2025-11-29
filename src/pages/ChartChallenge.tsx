@@ -16,12 +16,12 @@ const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"];
 
 type ChartType = "pie" | "bar" | "line";
 
-const easyScenarios = [
+const hardScenarios = [
   {
     title: "🎃 Pumpkin Searches Trend",
     chartType: "line" as ChartType,
     description: "Shape the search trend for 'pumpkin' throughout the year. Think about Halloween!",
-    target: [10, 15, 25, 85, 15, 10], // Sep, Oct early, Oct late, Oct 31, Nov, Dec
+    target: [10, 15, 25, 85, 15, 10],
     labels: ["Sep", "Early Oct", "Late Oct", "Halloween", "Nov", "Dec"],
     tolerance: 10,
   },
@@ -29,22 +29,29 @@ const easyScenarios = [
     title: "☀️ Sunscreen Searches Trend",
     chartType: "line" as ChartType,
     description: "Shape the search trend for 'sunscreen' throughout the year. Consider summer weather!",
-    target: [20, 45, 80, 90, 50, 15], // Spring to Winter
+    target: [20, 45, 80, 90, 50, 15],
     labels: ["Mar", "May", "Jun", "Jul", "Sep", "Dec"],
     tolerance: 10,
   },
   {
-    title: "💪 Gym Membership Trend",
+    title: "📚 School Books Searches Trend",
     chartType: "line" as ChartType,
-    description: "Shape gym sign-up trends. Think about New Year's resolutions and summer goals!",
-    target: [90, 60, 40, 35, 55, 30], // Jan peak, decline, summer bump
-    labels: ["Jan", "Feb", "Apr", "Jun", "Jul", "Dec"],
+    description: "Shape the search trend for 'school books'. Think about back-to-school season!",
+    target: [15, 20, 90, 70, 25, 10],
+    labels: ["Jun", "Jul", "Aug", "Sep", "Oct", "Dec"],
     tolerance: 10,
   },
 ];
 
 const challenges = {
-  easy: easyScenarios[Math.floor(Math.random() * easyScenarios.length)],
+  easy: {
+    title: "Chart Challenge",
+    chartType: "pie" as ChartType,
+    description: "Create a pie chart matching the target distribution",
+    target: [30, 50, 20],
+    labels: ["Product A", "Product B", "Product C"],
+    tolerance: 8,
+  },
   medium: {
     title: "Data Pattern Game",
     chartType: "bar" as ChartType,
@@ -53,14 +60,7 @@ const challenges = {
     labels: ["Q1", "Q2", "Q3", "Q4"],
     tolerance: 8,
   },
-  hard: {
-    title: "Analytics Puzzle",
-    chartType: "pie" as ChartType,
-    description: "Create a pie chart matching the target distribution",
-    target: [30, 45, 25],
-    labels: ["Category A", "Category B", "Category C"],
-    tolerance: 5,
-  },
+  hard: hardScenarios[Math.floor(Math.random() * hardScenarios.length)],
 };
 
 const ChartChallenge = () => {
